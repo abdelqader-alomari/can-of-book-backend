@@ -1,24 +1,47 @@
 'use strict';
 
-require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const jwt = require('jsonwebtoken');
-const jwksClient = require('jwks-rsa');
+const mongoose = require('mongoose')
+require('dotenv').config();
 
-const app = express();
-app.use(cors());
+const bookCollection = require('./BookModel')
 
-const PORT = process.env.PORT || 3001;
+// const jwt = require('jsonwebtoken');
+// const jwksClient = require('jwks-rsa');
 
-app.get('/test', (request, response) => {
+const server = express();
+server.use(cors());
 
-  // TODO: 
-  // STEP 1: get the jwt from the headers
-  // STEP 2. use the jsonwebtoken library to verify that it is a valid jwt
-  // jsonwebtoken dock - https://www.npmjs.com/package/jsonwebtoken
-  // STEP 3: to prove that everything is working correctly, send the opened jwt back to the front-end
+const PORT = process.env.PORT;
 
-})
+//MongoDB
+mongoose.connect(`${process.env.MONGO_DB_URL}/bookcollection`, { useNewUrlParser: true, useUnifiedTopology: true });
 
-app.listen(PORT, () => console.log(`listening on ${PORT}`));
+
+server.get('/', homeHandler);
+
+//Handlers
+function homeHandler(req, res) {
+  res.send('Home Route');
+}
+
+server.get('/books', getBooksHandler);
+
+function getBooksHandler(req, res) {
+  const { email } = req.query;
+
+  // search
+  bookCollection.find({ email: email }, function (err, booksData) {
+    if (err) {
+      res.send('Error');
+    }
+    else {
+      res.send(booksData);
+      console.log(booksData);
+    }
+  })
+}
+
+
+server.listen(PORT, () => console.log(`listening on ${PORT}`));
