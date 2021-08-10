@@ -16,7 +16,7 @@ server.use(cors());
 const PORT = process.env.PORT;
 
 //MongoDB
-mongoose.connect('mongodb://localhost:27017/bookcollection', { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(`${process.env.MONGO_DB_URL}/bookcollection`, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 server.get('/', homeHandler);
