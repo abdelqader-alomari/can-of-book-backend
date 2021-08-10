@@ -13,7 +13,7 @@ const bookCollection = require('./BookModel')
 const server = express();
 server.use(cors());
 
-const PORT = 3011;
+const PORT = process.env.PORT;
 
 //MongoDB
 mongoose.connect('mongodb://localhost:27017/bookcollection', { useNewUrlParser: true, useUnifiedTopology: true });
