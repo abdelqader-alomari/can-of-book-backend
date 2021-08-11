@@ -5,7 +5,7 @@ const cors = require('cors');
 const mongoose = require('mongoose')
 require('dotenv').config();
 
-const bookCollection = require('./BookModel')
+// const bookCollection = require('./BookModel')
 const {
   getBooksHandler,
   createBooksHandler,
@@ -34,8 +34,8 @@ function homeHandler(req, res) {
 }
 
 server.get('/books', getBooksHandler);
-server.post('/book', createBooksHandler);
-server.delete('/book/:book_id', deleteBooksHandler);
+server.post('/addBook', createBooksHandler);
+server.delete('/book/:id', deleteBooksHandler);
 
 
 

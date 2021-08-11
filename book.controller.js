@@ -21,23 +21,37 @@ const createBooksHandler = async (req, res) => {
         title,
         description,
         status,
-        img_src
+        img_url
     } = req.body;
 
-    const newBookObj = new bookCollection({
-        email: email,
-        title: title,
-        description: description,
-        status: status,
-        img_src: img_src
-    });
-    newBookObj.save();
-    res.json(newBookObj);
+    bookCollection.find({ email: email }, function (err, booksData) {
+        if (err) {
+            res.send('Error');
+        }
+        else {
+            booksData[0].books.push({
+                title: title, description: description, status: status, img_url: img_url
+            })
+            booksData[0].save();
+            res.json(booksData[0].books);
+        }
+    })
+
 }
 const deleteBooksHandler = async (req, res) => {
-    const bookId = req.params.book_id;
-    bookCollection.deleteOne({ _id: bookId }, (error, deleted) => {
-        res.send(deleted);
+    const id = req.params.id;
+    const { email } = req.query;
+    bookCollection.find({ email: email }, (err, resultData) => {
+        if (err) {
+            "error"
+        }
+        else {
+            const newBooks = resultData[0].books.filter((book, index) => index != id);
+
+            resultData[0].books = newBooks;
+            resultData[0].save();
+            res.send(resultData[0].books);
+        }
     })
 }
 
