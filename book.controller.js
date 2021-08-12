@@ -54,12 +54,30 @@ const deleteBooksHandler = async (req, res) => {
         }
     })
 }
-
+function updateBooksHandler(req, res) {
+    const id = req.params.id;
+    const {
+        email,
+        title,
+        description,
+        status,
+        img_url
+    } = req.body;
+    bookCollection.findOne({ email: email }, (err, resultData) => {
+        // console.log('findOne: ' ,resultData);
+        resultData.books.splice(id, 1, {
+            title: title, description: description, status: status, img_url: img_url
+        })
+        resultData.save();
+        res.send(resultData.cats);
+    })
+}
 
 
 
 module.exports = {
     getBooksHandler,
     createBooksHandler,
-    deleteBooksHandler
+    deleteBooksHandler,
+    updateBooksHandler
 }

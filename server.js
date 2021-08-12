@@ -9,7 +9,8 @@ require('dotenv').config();
 const {
   getBooksHandler,
   createBooksHandler,
-  deleteBooksHandler
+  deleteBooksHandler,
+  updateBooksHandler
 } = require('./book.controller')
 
 // const jwt = require('jsonwebtoken');
@@ -23,7 +24,7 @@ const PORT = process.env.PORT;
 const MONGO_DB_URL = process.env.MONGO_DB_URL;
 
 //MongoDB
-mongoose.connect(`${MONGO_DB_URL}/bookcollection`, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(`${MONGO_DB_URL}`, { useNewUrlParser: true, useUnifiedTopology: true });
 
 
 server.get('/', homeHandler);
@@ -35,7 +36,8 @@ function homeHandler(req, res) {
 
 server.get('/books', getBooksHandler);
 server.post('/addBook', createBooksHandler);
-server.delete('/book/:id', deleteBooksHandler);
+server.delete('/deleteBook/:id', deleteBooksHandler);
+server.put('/updateBook/:id', updateBooksHandler);
 
 
 
