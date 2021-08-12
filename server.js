@@ -1,24 +1,44 @@
 'use strict';
 
-require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const jwt = require('jsonwebtoken');
-const jwksClient = require('jwks-rsa');
+const mongoose = require('mongoose')
+require('dotenv').config();
 
-const app = express();
-app.use(cors());
+// const bookCollection = require('./BookModel')
+const {
+  getBooksHandler,
+  createBooksHandler,
+  deleteBooksHandler,
+  updateBooksHandler
+} = require('./book.controller')
 
-const PORT = process.env.PORT || 3001;
+// const jwt = require('jsonwebtoken');
+// const jwksClient = require('jwks-rsa');
 
-app.get('/test', (request, response) => {
+const server = express();
+server.use(cors());
+server.use(express.json())
 
-  // TODO: 
-  // STEP 1: get the jwt from the headers
-  // STEP 2. use the jsonwebtoken library to verify that it is a valid jwt
-  // jsonwebtoken dock - https://www.npmjs.com/package/jsonwebtoken
-  // STEP 3: to prove that everything is working correctly, send the opened jwt back to the front-end
+const PORT = process.env.PORT;
+const MONGO_DB_URL = process.env.MONGO_DB_URL;
 
-})
+//MongoDB
+mongoose.connect(`${MONGO_DB_URL}`, { useNewUrlParser: true, useUnifiedTopology: true });
 
-app.listen(PORT, () => console.log(`listening on ${PORT}`));
+
+server.get('/', homeHandler);
+
+//Handlers
+function homeHandler(req, res) {
+  res.send('Home Route');
+}
+
+server.get('/books', getBooksHandler);
+server.post('/addBook', createBooksHandler);
+server.delete('/deleteBook/:id', deleteBooksHandler);
+server.put('/updateBook/:id', updateBooksHandler);
+
+
+
+server.listen(PORT, () => console.log(`listening on ${PORT}`));
